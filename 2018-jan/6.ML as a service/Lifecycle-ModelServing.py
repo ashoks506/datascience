@@ -1,0 +1,25 @@
+from flask import Flask, jsonify, request
+from sklearn.externals import joblib
+import pandas as pd
+import numpy as np
+import os
+
+app = Flask(__name__)
+
+@app.route('/predict', methods=['POST'])
+def predict():
+     data = request.json
+     print(data)
+     titanic_test = pd.DataFrame(data)
+     features = ['Pclass', 'Sex', 'Embarked']
+     titanic_test1 = pd.get_dummies(titanic_test, columns=features)
+     prediction = dt_estimator.predict(titanic_test1)
+     print(prediction)
+     return jsonify(prediction=prediction)
+ 
+MODEL_DIR = 'D:/Projects/datasets'
+MODEL_FILE = 'decision-tree-v1.pkl'
+if __name__ == '__main__':
+     os.chdir(MODEL_DIR)
+     dt_estimator = joblib.load(MODEL_FILE)
+     app.run(port=6696)
